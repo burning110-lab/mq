@@ -1,0 +1,296 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qu.lele.dao.MsgLogDao">
+  <resultMap id="BaseResultMap" type="com.qu.lele.dto.MsgLog">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="msg" jdbcType="VARCHAR" property="msg" />
+    <result column="exchange" jdbcType="VARCHAR" property="exchange" />
+    <result column="routingKey" jdbcType="VARCHAR" property="routingkey" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="tryCount" jdbcType="INTEGER" property="trycount" />
+    <result column="nextTryTime" jdbcType="BIGINT" property="nexttrytime" />
+    <result column="createTime" jdbcType="VARCHAR" property="createtime" />
+    <result column="updateTime" jdbcType="VARCHAR" property="updatetime" />
+    <result column="alertId" jdbcType="VARCHAR" property="alertid" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, msg, exchange, routingKey, `status`, tryCount, nextTryTime, createTime, updateTime, 
+    alertId
+  </sql>
+  <select id="selectByExample" parameterType="com.qu.lele.dto.MsgLogExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from msg_log
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    <if test="limit != null">
+      <if test="offset != null">
+        limit ${offset}, ${limit}
+      </if>
+      <if test="offset == null">
+        limit ${limit}
+      </if>
+    </if>
+    <if test="forUpdate != null and forUpdate == true">
+      for update
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from msg_log
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from msg_log
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.qu.lele.dto.MsgLogExample">
+    delete from msg_log
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.qu.lele.dto.MsgLog" useGeneratedKeys="true">
+    insert into msg_log (msg, exchange, routingKey, 
+      `status`, tryCount, nextTryTime, 
+      createTime, updateTime, alertId
+      )
+    values (#{msg,jdbcType=VARCHAR}, #{exchange,jdbcType=VARCHAR}, #{routingkey,jdbcType=VARCHAR}, 
+      #{status,jdbcType=INTEGER}, #{trycount,jdbcType=INTEGER}, #{nexttrytime,jdbcType=BIGINT}, 
+      #{createtime,jdbcType=VARCHAR}, #{updatetime,jdbcType=VARCHAR}, #{alertid,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.qu.lele.dto.MsgLog" useGeneratedKeys="true">
+    insert into msg_log
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="msg != null">
+        msg,
+      </if>
+      <if test="exchange != null">
+        exchange,
+      </if>
+      <if test="routingkey != null">
+        routingKey,
+      </if>
+      <if test="status != null">
+        `status`,
+      </if>
+      <if test="trycount != null">
+        tryCount,
+      </if>
+      <if test="nexttrytime != null">
+        nextTryTime,
+      </if>
+      <if test="createtime != null">
+        createTime,
+      </if>
+      <if test="updatetime != null">
+        updateTime,
+      </if>
+      <if test="alertid != null">
+        alertId,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="msg != null">
+        #{msg,jdbcType=VARCHAR},
+      </if>
+      <if test="exchange != null">
+        #{exchange,jdbcType=VARCHAR},
+      </if>
+      <if test="routingkey != null">
+        #{routingkey,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="trycount != null">
+        #{trycount,jdbcType=INTEGER},
+      </if>
+      <if test="nexttrytime != null">
+        #{nexttrytime,jdbcType=BIGINT},
+      </if>
+      <if test="createtime != null">
+        #{createtime,jdbcType=VARCHAR},
+      </if>
+      <if test="updatetime != null">
+        #{updatetime,jdbcType=VARCHAR},
+      </if>
+      <if test="alertid != null">
+        #{alertid,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.qu.lele.dto.MsgLogExample" resultType="java.lang.Long">
+    select count(*) from msg_log
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update msg_log
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=VARCHAR},
+      </if>
+      <if test="record.msg != null">
+        msg = #{record.msg,jdbcType=VARCHAR},
+      </if>
+      <if test="record.exchange != null">
+        exchange = #{record.exchange,jdbcType=VARCHAR},
+      </if>
+      <if test="record.routingkey != null">
+        routingKey = #{record.routingkey,jdbcType=VARCHAR},
+      </if>
+      <if test="record.status != null">
+        `status` = #{record.status,jdbcType=INTEGER},
+      </if>
+      <if test="record.trycount != null">
+        tryCount = #{record.trycount,jdbcType=INTEGER},
+      </if>
+      <if test="record.nexttrytime != null">
+        nextTryTime = #{record.nexttrytime,jdbcType=BIGINT},
+      </if>
+      <if test="record.createtime != null">
+        createTime = #{record.createtime,jdbcType=VARCHAR},
+      </if>
+      <if test="record.updatetime != null">
+        updateTime = #{record.updatetime,jdbcType=VARCHAR},
+      </if>
+      <if test="record.alertid != null">
+        alertId = #{record.alertid,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update msg_log
+    set id = #{record.id,jdbcType=VARCHAR},
+      msg = #{record.msg,jdbcType=VARCHAR},
+      exchange = #{record.exchange,jdbcType=VARCHAR},
+      routingKey = #{record.routingkey,jdbcType=VARCHAR},
+      `status` = #{record.status,jdbcType=INTEGER},
+      tryCount = #{record.trycount,jdbcType=INTEGER},
+      nextTryTime = #{record.nexttrytime,jdbcType=BIGINT},
+      createTime = #{record.createtime,jdbcType=VARCHAR},
+      updateTime = #{record.updatetime,jdbcType=VARCHAR},
+      alertId = #{record.alertid,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.qu.lele.dto.MsgLog">
+    update msg_log
+    <set>
+      <if test="msg != null">
+        msg = #{msg,jdbcType=VARCHAR},
+      </if>
+      <if test="exchange != null">
+        exchange = #{exchange,jdbcType=VARCHAR},
+      </if>
+      <if test="routingkey != null">
+        routingKey = #{routingkey,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        `status` = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="trycount != null">
+        tryCount = #{trycount,jdbcType=INTEGER},
+      </if>
+      <if test="nexttrytime != null">
+        nextTryTime = #{nexttrytime,jdbcType=BIGINT},
+      </if>
+      <if test="createtime != null">
+        createTime = #{createtime,jdbcType=VARCHAR},
+      </if>
+      <if test="updatetime != null">
+        updateTime = #{updatetime,jdbcType=VARCHAR},
+      </if>
+      <if test="alertid != null">
+        alertId = #{alertid,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.qu.lele.dto.MsgLog">
+    update msg_log
+    set msg = #{msg,jdbcType=VARCHAR},
+      exchange = #{exchange,jdbcType=VARCHAR},
+      routingKey = #{routingkey,jdbcType=VARCHAR},
+      `status` = #{status,jdbcType=INTEGER},
+      tryCount = #{trycount,jdbcType=INTEGER},
+      nextTryTime = #{nexttrytime,jdbcType=BIGINT},
+      createTime = #{createtime,jdbcType=VARCHAR},
+      updateTime = #{updatetime,jdbcType=VARCHAR},
+      alertId = #{alertid,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

@@ -1,0 +1,63 @@
+server:
+  port: 5678
+
+spring:
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://192.168.92.130:3306/db2021?characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+    username: root
+    password: 123456
+    dbcp2:
+      initial-size: 5
+      min-idle: 5
+      max-total: 5
+      max-wait-millis: 200
+      validation-query: SELECT 1
+      test-while-idle: true
+      test-on-borrow: false
+      test-on-return: false
+  rabbitmq:
+    host: 192.168.92.130
+    port: 5672
+    virtual-host: /
+    username: qugl
+    password: 123456
+
+    #生产者确认机制
+    #开启publisher-confirm(需要手动开启)
+    #correlated: 异步回调，定义ConfirmCallback，MQ返回结果时会回调这个ConfirmCallback
+    #simple:同步等待confirm结果直到超时
+    publisher-confirm-type: correlated
+    #开启publish-return功能 定义ReturnCallback(当路由到队列失败时回调)
+    publisher-returns: true
+    #定义消息路由失败时的策略(true，则调用ReturnCallback；false：则直接丢弃消息,默认是true)
+    template:
+      mandatory: true
+
+    #消费者确认机制
+    #消费者开启手动ack模式
+    #manual：手动ack,需要在业务代码结束后，调用api发送ack
+    #auto：自动ack，由spring监测listener代码是否出现异常，没有异常则返回ack；抛出异常则返回nack
+    #none：关闭ack，MQ假定消费者获取消息后会成功处理，因此消息投递后立即被删除
+    listener:
+      simple:
+        acknowledge-mode: manual
+        retry:
+          #开启消费者消费失败重试(默认false)
+          enabled: true
+          #初始的失败等待时长为1秒
+          initial-interval: 2000ms
+          #失败的等待时长倍数，下次等待时长 = multiplier * last-interval
+          multiplier: 1
+          #最大重试次数(包含当前消费一次)
+          max-attempts: 2
+          #true无状态；false有状态。如果业务中包含事务，这里改为false
+          stateless: true
+          #最大重试时间间隔
+          max-interval: 10000ms
+
+
+logging:
+  level:
+    root: info
